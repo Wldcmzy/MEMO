@@ -9,9 +9,9 @@
     tools:context=".MainActivity">
 
     <LinearLayout
+        android:background="#ddaa90"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#fff"
         android:orientation="vertical">
 
         <LinearLayout

@@ -6,8 +6,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/list_member_radius"
+        android:layout_margin="5dp">
+
         <TextView
             android:id="@+id/show_text"
             android:layout_width="match_parent"
@@ -17,14 +20,18 @@
             android:maxEms="15"
             android:maxLines="1"
             android:ellipsize="end"
-            android:text="@string/edit"/>
+            android:textColor="#000000"
+            android:text="@string/edit"
+            android:layout_marginLeft="10dp"/>
         <TextView
             android:id="@+id/show_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#c3c3c3"
+            android:textColor="@color/blue"
             android:textStyle="italic"
-            android:text="@string/edit"/>
+            android:text="@string/edit"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

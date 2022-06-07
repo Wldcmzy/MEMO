@@ -49,12 +49,16 @@ public class MemoAdapter extends BaseAdapter {
 
         int tmp;
         tmp = cursor.getColumnIndex("datas");
-        String content = cursor.getString(tmp);
-        Log.d(">>>>>>>>", content + "<<<<<<<<<<<");
+        String datas = cursor.getString(tmp);
         tmp = cursor.getColumnIndex("lastModifyTime");
-        String time = cursor.getString(tmp);
-        holder.text.setText(content);
-        holder.textTime.setText(time);
+        String Mtime = cursor.getString(tmp);
+        tmp = cursor.getColumnIndex("createTime");
+        String Ctime = cursor.getString(tmp);
+        String[] dataArray = datas.split("\n");
+        holder.text.setText(dataArray[0]);
+        Log.d(">>>>>>>>", dataArray[0] + "<<<<<<<<<<<");
+//        holder.textTime.setText("修改时间:" + Mtime + "创建时间" + Ctime);
+        holder.textTime.setText("最近修改时间:  " + Mtime);
         return convertView;
     }
 }
