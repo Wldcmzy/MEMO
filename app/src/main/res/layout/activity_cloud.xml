@@ -4,47 +4,64 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ActionActivity">
+    android:orientation="vertical"
+    tools:context=".CloudActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <EditText
-            android:id="@+id/edit_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/title"
-            android:textSize="25sp"/>
+            android:hint="云端IP(IPv4):" />
+
         <EditText
-            android:id="@+id/edit_text"
-            android:focusable="true"
-            android:gravity="top|left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/text" />
+            android:hint="端口号:" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <Button
-                android:id="@+id/btn_back"
+                android:id="@+id/ipwrite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="#fff"
-                android:background="#000000"
-                android:text="@string/back" />
+                android:text="@string/address_auto_write"
+                android:layout_marginLeft="10dp"/>
+
             <Button
-                android:id="@+id/btn_add"
+                android:id="@+id/ipsave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="#fff"
-                android:background="#000000"
-                android:text="@string/add" />
+                android:text="@string/address_save"
+                android:layout_marginLeft="20dp"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/upload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/upload"
+                android:layout_marginLeft="10dp"/>
+
+            <Button
+                android:id="@+id/download"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/download"
+                android:layout_marginLeft="55dp"/>
+        </LinearLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

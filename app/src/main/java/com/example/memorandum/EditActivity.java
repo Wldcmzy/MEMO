@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class EditActivity extends AppCompatActivity implements View.OnClickListener {
-    private EditText editText;
+    private EditText editText, editTitle;
     private Button save, cancel;
     private MemoSQLiteOpenHelper sqliteHelper;
     private SQLiteDatabase database;
@@ -30,13 +30,17 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         sqliteHelper = new MemoSQLiteOpenHelper(this);
         database = sqliteHelper.getWritableDatabase();
         pos = getIntent().getStringExtra(sqliteHelper.id);
-        String content = getIntent().getStringExtra(sqliteHelper.datas);
-        editText.setText(content);
-        editText.setSelection(content.length());
+        String datas = getIntent().getStringExtra(sqliteHelper.datas);
+        editText.setText(datas);
+        editText.setSelection(datas.length());
+        String title = getIntent().getStringExtra(sqliteHelper.title);
+        editTitle.setText(title);
+        editTitle.setSelection(title.length());
     }
 
     private void initView() {
         editText = findViewById(R.id.edit_text);
+        editTitle = findViewById(R.id.edit_title);
         save = findViewById(R.id.save);
         cancel = findViewById(R.id.cancel);
     }
@@ -61,6 +65,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         values.put(sqliteHelper.datas, editText.getText().toString());
         //values.put(sqliteHelper.createTime, formatTime());
         values.put(sqliteHelper.lastModifyTime, formatTime());
+        values.put(sqliteHelper.title, editTitle.getText().toString());
         database.insert(sqliteHelper.tableName, null, values);
     }
 

@@ -3,12 +3,17 @@
     <string name="note">文字</string>
     <string name="img">图片</string>
     <string name="vid">视频</string>
-    <string name="tip">在这里记录您的故事吧</string>
+    <string name="title">标题</string>
+    <string name="text">正文内容...</string>
     <string name="add">添加</string>
     <string name="back">返回</string>
     <string name="delete">删除</string>
     <string name="edit">编辑</string>
     <string name="save">确认</string>
     <string name="cancel">取消</string>
+    <string name="address_auto_write">载入默认地址</string>
+    <string name="address_save">保存为默认地址</string>
+    <string name="upload">上传数据</string>
+    <string name="download">下载数据</string>
 
 </resources>

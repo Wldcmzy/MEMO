@@ -1,7 +1,9 @@
 package com.example.memorandum;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -10,7 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class OneMemoActivity extends AppCompatActivity implements View.OnClickListener {
-    private TextView textView;
+    private TextView textView, titleView;
     private Button delete, back, edit;
     private MemoSQLiteOpenHelper sqliteHelper;
     private SQLiteDatabase database;
@@ -26,12 +28,15 @@ public class OneMemoActivity extends AppCompatActivity implements View.OnClickLi
         sqliteHelper = new MemoSQLiteOpenHelper(this);
         database = sqliteHelper.getWritableDatabase();
         pos = getIntent().getStringExtra(sqliteHelper.id);
-        String content = getIntent().getStringExtra(sqliteHelper.datas);
-        textView.setText(content);
+        String datas = getIntent().getStringExtra(sqliteHelper.datas);
+        textView.setText(datas);
+        String title = getIntent().getStringExtra(sqliteHelper.title);
+        titleView.setText(title);
     }
 
     private void initView() {
         textView = findViewById(R.id.look_text);
+        titleView = findViewById(R.id.look_title);
         delete = findViewById(R.id.delete);
         back = findViewById(R.id.back);
         edit = findViewById(R.id.edit);
@@ -41,11 +46,29 @@ public class OneMemoActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.delete:
-                deleteByPos();
-                Intent intent1 = new Intent(OneMemoActivity.this, DeleteService.class);
-                intent1.putExtra("pos", pos);
-                startService(intent1);
-                finish();
+                AlertDialog.Builder builder = new AlertDialog.Builder(OneMemoActivity.this);
+                builder.setMessage("你确定要删除吗?")
+                        .setTitle("提示")
+                        .setPositiveButton("确定",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        deleteByPos();
+                                        Intent intent1 = new Intent(OneMemoActivity.this, DeleteService.class);
+                                        intent1.putExtra("pos", pos);
+                                        startService(intent1);
+                                        dialog.dismiss();
+                                        finish();
+                                    }
+                                })
+                        .setNegativeButton("不,刚才我手滑了",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                        .show();
                 break;
             case R.id.back:
                 finish();
@@ -54,6 +77,7 @@ public class OneMemoActivity extends AppCompatActivity implements View.OnClickLi
                 Intent intent = new Intent(OneMemoActivity.this, EditActivity.class);
                 intent.putExtra(sqliteHelper.id, getIntent().getStringExtra(sqliteHelper.id));
                 intent.putExtra(sqliteHelper.datas, getIntent().getStringExtra(sqliteHelper.datas));
+                intent.putExtra(sqliteHelper.title, getIntent().getStringExtra(sqliteHelper.title));
                 startActivity(intent);
                 break;
         }

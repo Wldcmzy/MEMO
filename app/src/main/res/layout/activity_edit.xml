@@ -10,6 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edit_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title"
+            android:textSize="25sp"
+            />
+
         <EditText
             android:id="@+id/edit_text"
             android:layout_width="match_parent"
@@ -22,14 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
-                android:id="@+id/save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="#fff"
-                android:background="#000000"
-                android:text="@string/save"/>
-            <Button
                 android:id="@+id/cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -37,6 +38,14 @@
                 android:textColor="#fff"
                 android:background="#000000"
                 android:text="@string/cancel"/>
+            <Button
+                android:id="@+id/save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#fff"
+                android:background="#000000"
+                android:text="@string/save"/>
         </LinearLayout>
     </LinearLayout>
 

@@ -15,7 +15,7 @@ import java.util.Date;
 public class ActionActivity extends AppCompatActivity implements View.OnClickListener {
     private int action;
     private Button btnAdd, btnBack;
-    private EditText editText;
+    private EditText editText, editTitle;
     private MemoSQLiteOpenHelper sqliteHelper;
     private SQLiteDatabase database;
     @Override
@@ -32,6 +32,7 @@ public class ActionActivity extends AppCompatActivity implements View.OnClickLis
 
     private void initView() {
         editText = findViewById(R.id.edit_text);
+        editTitle = findViewById(R.id.edit_title);
         btnAdd = findViewById(R.id.btn_add);
         btnBack = findViewById(R.id.btn_back);
         btnAdd.setOnClickListener(this);
@@ -65,6 +66,7 @@ public class ActionActivity extends AppCompatActivity implements View.OnClickLis
         values.put(sqliteHelper.datas, editText.getText().toString());
 //        values.put(sqliteHelper.createTime, formatTime());
         values.put(sqliteHelper.lastModifyTime, formatTime());
+        values.put(sqliteHelper.title, editTitle.getText().toString());
         database.insert(sqliteHelper.tableName, null, values);
     }
 

@@ -18,7 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private ListView listView;
-    private FloatingActionButton button;
+    private FloatingActionButton buttonAction, buttonSave;
     private MemoAdapter adapter;
     private Intent intent;
     private MemoSQLiteOpenHelper sqliteHelper;
@@ -40,18 +40,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initView(){
         listView = findViewById(R.id.list_view);
-        button = findViewById(R.id.sljq);
-        button.setOnClickListener(this);
+        buttonAction = findViewById(R.id.sljq);
+        buttonAction.setOnClickListener(this);
+        buttonSave = findViewById(R.id.xjj);
+        buttonSave.setOnClickListener(this);
         sqliteHelper = new MemoSQLiteOpenHelper(this);
         database = sqliteHelper.getReadableDatabase();
-        int a = 3;
+
     }
 
     @Override
     public void onClick(View v) {
-        intent = new Intent(MainActivity.this, ActionActivity.class);
-        intent.putExtra("action", 1);
-        startActivity(intent);
+        switch(v.getId()){
+            case R.id.sljq:
+                intent = new Intent(MainActivity.this, ActionActivity.class);
+                intent.putExtra("action", 1);
+                startActivity(intent);
+                break;
+            case R.id.xjj:
+                intent = new Intent(MainActivity.this, CloudActivity.class);
+                startActivity(intent);
+        }
+
     }
 
     @Override
@@ -92,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.putExtra(sqliteHelper.datas, cursor.getString(tmp));
                 tmp = cursor.getColumnIndex(sqliteHelper.lastModifyTime);
                 intent.putExtra(sqliteHelper.lastModifyTime, cursor.getString(tmp));
+                tmp = cursor.getColumnIndex(sqliteHelper.title);
+                intent.putExtra(sqliteHelper.title, cursor.getString((tmp)));
                 startActivity(intent);
             }
         });

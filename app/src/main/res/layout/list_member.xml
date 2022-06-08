@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="3dp"
-            android:textSize="21sp"
+            android:textSize="20sp"
             android:maxEms="15"
             android:maxLines="1"
             android:ellipsize="end"
