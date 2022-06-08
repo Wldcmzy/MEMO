@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initView(){
         listView = findViewById(R.id.list_view);
-        button = findViewById(R.id.bzz);
+        button = findViewById(R.id.sljq);
         button.setOnClickListener(this);
         sqliteHelper = new MemoSQLiteOpenHelper(this);
         database = sqliteHelper.getReadableDatabase();
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void queryAll(){
-        Cursor cursor = database.query(sqliteHelper.tableName, null,null,null,null,null, null);
+        Cursor cursor = database.query(sqliteHelper.tableName, null,null,null,null,null, sqliteHelper.lastModifyTime);
         adapter = new MemoAdapter(this, cursor);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, OneMemoActivity.class);
                 intent.putExtra("i", position);
-                Cursor cursor = database.query(sqliteHelper.tableName, null,null,null,null,null, "id");
+                Cursor cursor = database.query(sqliteHelper.tableName, null,null,null,null,null, sqliteHelper.id);
                 cursor.moveToPosition(position);
 
                 int tmp;

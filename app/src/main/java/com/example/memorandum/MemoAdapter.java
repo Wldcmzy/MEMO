@@ -37,23 +37,28 @@ public class MemoAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         Holder holder;
         if(convertView == null){
+            // 将布局实例化
             convertView = LayoutInflater.from(context).inflate(R.layout.list_member, null);
+
             holder = new Holder();
             holder.text = convertView.findViewById(R.id.show_text);
             holder.textTime = convertView.findViewById(R.id.show_time);
+            //将holder数据缓存起来
             convertView.setTag(holder);
         }else {
+            //提取holder缓存数据
             holder = (Holder)convertView.getTag();
         }
         cursor.moveToPosition(position);
 
+        //getColumnIndex允许返回的-1, 是getString的非法参数。
         int tmp;
         tmp = cursor.getColumnIndex("datas");
         String datas = cursor.getString(tmp);
         tmp = cursor.getColumnIndex("lastModifyTime");
         String Mtime = cursor.getString(tmp);
-        tmp = cursor.getColumnIndex("createTime");
-        String Ctime = cursor.getString(tmp);
+//        tmp = cursor.getColumnIndex("createTime");
+//        String Ctime = cursor.getString(tmp);
         String[] dataArray = datas.split("\n");
         holder.text.setText(dataArray[0]);
         Log.d(">>>>>>>>", dataArray[0] + "<<<<<<<<<<<");

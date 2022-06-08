@@ -19,6 +19,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     private MemoSQLiteOpenHelper sqliteHelper;
     private SQLiteDatabase database;
     private String pos;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

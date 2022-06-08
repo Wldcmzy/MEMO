@@ -30,13 +30,13 @@
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/bzz"
+            android:id="@+id/sljq"
             android:layout_gravity="right|bottom"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"
-            android:src="@drawable/bzz"
+            android:src="@drawable/sljq"
             app:borderWidth="0dp"
-            app:backgroundTint="#fff"
+            app:backgroundTint="#99ccff"
             app:rippleColor="#33728dff"
             app:elevation="8dp"
             app:pressedTranslationZ="16dp"/>

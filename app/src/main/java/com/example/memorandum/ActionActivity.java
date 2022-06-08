@@ -63,7 +63,7 @@ public class ActionActivity extends AppCompatActivity implements View.OnClickLis
     private void insertDB() {
         ContentValues values = new ContentValues();
         values.put(sqliteHelper.datas, editText.getText().toString());
-        values.put(sqliteHelper.createTime, formatTime());
+//        values.put(sqliteHelper.createTime, formatTime());
         values.put(sqliteHelper.lastModifyTime, formatTime());
         database.insert(sqliteHelper.tableName, null, values);
     }
