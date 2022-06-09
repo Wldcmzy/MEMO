@@ -13,6 +13,18 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/storage_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="仓库名:" />
+
+        <EditText
+            android:id="@+id/storage_pswd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="仓库密码:" />
+
+        <EditText
             android:id="@+id/edit_ip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

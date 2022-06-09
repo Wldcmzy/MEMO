@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -35,7 +36,7 @@ import java.nio.charset.StandardCharsets;
 
 public class CloudActivity extends AppCompatActivity implements View.OnClickListener{
     private Button saveAddr, loadAddr, upload, download;
-    private EditText editIp, editPort;
+    private EditText editIp, editPort, storageName, storagePassword;
     final private String addressFile = "MemoAddress34.txt";
     private MemoSQLiteOpenHelper sqliteHelper;
     private SQLiteDatabase database;
@@ -58,8 +59,12 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
         upload.setOnClickListener(this);
         download = findViewById(R.id.download);
         download.setOnClickListener(this);
+
         editIp = findViewById(R.id.edit_ip);
         editPort = findViewById(R.id.edit_port);
+        storageName = findViewById(R.id.storage_name);
+        storagePassword = findViewById(R.id.storage_pswd);
+
         sqliteHelper = new MemoSQLiteOpenHelper(this);
         database = sqliteHelper.getReadableDatabase();
     }
@@ -74,7 +79,8 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
                 selectIfAddressDump();
                 break;
             case R.id.upload:
-                upload(editIp.getText().toString(), editPort.getText().toString());
+                selectIfUpload(editIp.getText().toString(), editPort.getText().toString());
+//                upload(editIp.getText().toString(), editPort.getText().toString());
 //                uploadUDP(editIp.getText().toString(), editPort.getText().toString());
                 break;
             case R.id.download:
@@ -184,7 +190,7 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-    private void selectIfUpload(){
+    private void selectIfUpload(String ip, String port){
         String addr = editIp.getText().toString() + ":" + editPort.getText().toString();
         AlertDialog.Builder builder = new AlertDialog.Builder(CloudActivity.this);
         builder.setMessage("你确定要将所有备忘录信息发送至" + addr + "吗?")
@@ -193,7 +199,7 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                addressDump();
+                                upload(ip, port);
                                 dialog.dismiss();
                             }
                         })
@@ -212,8 +218,15 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
         new Thread() {
             //线程运行的代码
             public void run() {
+                Looper.prepare();
                 try {
-                    Looper.prepare();
+
+                    String db_name = storageName.getText().toString();
+                    String db_key = storagePassword.getText().toString();
+                    if(db_name.length() <= 2 || db_key.length() <= 2){
+                        Toast.makeText(CloudActivity.this, "库名和密码长度需要大于2", Toast.LENGTH_SHORT).show();
+                        throw new Exception("too short of name or key");
+                    }
 
                     InetAddress serverip= InetAddress.getByName(ip);;//定义保存服务器地址的对象
                     Socket client=new Socket(serverip, Integer.parseInt(port));//定义创建客户端对象的Socket
@@ -226,6 +239,16 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
                     Cursor cursor = database.query(sqliteHelper.tableName, null,null,null,null,null, sqliteHelper.lastModifyTime);
                     int rowSize = cursor.getCount();
                     String sep = "_@#sE*p_";
+
+                    String firstData = db_name + sep + db_key + sep + "upload";
+                    socketOut.write(firstData.getBytes("utf-8"));
+                    int len=socketIn.read(receive);
+                    String rev=new String(receive,0,len);
+
+                    if (! rev.equals("ok")){
+                        Toast.makeText(CloudActivity.this, "拒绝访问", Toast.LENGTH_SHORT).show();
+                        throw new Exception("access deny");
+                    }
 
                     for(int row=0; row<rowSize ; row++) {
 
@@ -242,9 +265,9 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
 
                         socketOut.write(data.getBytes("utf-8"));
 
-                        int len=socketIn.read(receive);
+                        len=socketIn.read(receive);
                         //将读取来保存在字节数组中的数据转换成字符串
-                        String rev=new String(receive,0,len);
+                        rev=new String(receive,0,len);
 
                     }
                     socketOut.close();
@@ -252,11 +275,14 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
                     client.close();
 
                     Toast.makeText(CloudActivity.this, "同步完成", Toast.LENGTH_SHORT).show();
-                    Looper.loop();
-                }catch(Exception e){
-                    e.printStackTrace();
-                    Log.i("tcp-error", e.getMessage());
+                }catch(ConnectException e){
+                    Toast.makeText(CloudActivity.this, "未能成功连接服务器", Toast.LENGTH_SHORT).show();
                 }
+                catch(Exception e){
+                    Log.i("tcp-error", e.getMessage() + e.getStackTrace() + e.getClass());
+                    Toast.makeText(CloudActivity.this, "发生错误", Toast.LENGTH_SHORT).show();
+                }
+                Looper.loop();
             }
         }.start();//启动线程
     }
