@@ -60,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.xjj:
                 intent = new Intent(MainActivity.this, CloudActivity.class);
                 startActivity(intent);
+                break;
+            default:
+                break;
         }
 
     }

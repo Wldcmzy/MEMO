@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
 public class DeleteService extends Service {
     private MemoSQLiteOpenHelper sqliteHelper;
@@ -23,6 +24,7 @@ public class DeleteService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         deleteByPos(intent.getStringExtra("pos"));
+        Log.i("34234234", "delete>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         return super.onStartCommand(intent, flags, startId);
     }
 

@@ -13,11 +13,13 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/edit_ip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="云端IP(IPv4):" />
 
         <EditText
+            android:id="@+id/edit_port"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="端口号:" />
@@ -28,7 +30,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/ipwrite"
+                android:id="@+id/ipread"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/address_auto_write"
