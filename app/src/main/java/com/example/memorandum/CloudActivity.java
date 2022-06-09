@@ -84,6 +84,7 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
 //                uploadUDP(editIp.getText().toString(), editPort.getText().toString());
                 break;
             case R.id.download:
+                selectIfDownload(editIp.getText().toString(), editPort.getText().toString());
                 break;
             default:
                 break;
@@ -268,6 +269,104 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
                         len=socketIn.read(receive);
                         //将读取来保存在字节数组中的数据转换成字符串
                         rev=new String(receive,0,len);
+                        if (! rev.equals("ok")){
+                            Toast.makeText(CloudActivity.this, "传输中遇到错误", Toast.LENGTH_SHORT).show();
+                            throw new Exception("error at half road");
+                        }
+
+
+                    }
+                    socketOut.close();
+                    socketIn.close();
+                    client.close();
+
+                    Toast.makeText(CloudActivity.this, "同步完成", Toast.LENGTH_SHORT).show();
+                }catch(ConnectException e){
+                    Toast.makeText(CloudActivity.this, "未能成功连接服务器", Toast.LENGTH_SHORT).show();
+                }
+                catch(Exception e){
+                    Log.i("tcp-error", e.getMessage() + e.getStackTrace() + e.getClass());
+                    Toast.makeText(CloudActivity.this, "发生错误", Toast.LENGTH_SHORT).show();
+                }
+                Looper.loop();
+            }
+        }.start();//启动线程
+    }
+
+    private void selectIfDownload(String ip, String port){
+        AlertDialog.Builder builder = new AlertDialog.Builder(CloudActivity.this);
+        builder.setMessage("你确定要将本地数据同步未最新云端数据吗?你刚编辑的进度可能会丢失。")
+                .setTitle("二次询问")
+                .setPositiveButton("确定",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                download(ip, port);
+                                dialog.dismiss();
+                            }
+                        })
+                .setNegativeButton("不,刚才我手滑了",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                .show();
+    }
+
+    private void download(String ip, String port){
+        new Thread() {
+            //线程运行的代码
+            public void run() {
+                Looper.prepare();
+                try {
+
+                    String db_name = storageName.getText().toString();
+                    String db_key = storagePassword.getText().toString();
+                    if(db_name.length() <= 2 || db_key.length() <= 2){
+                        Toast.makeText(CloudActivity.this, "库名和密码长度需要大于2", Toast.LENGTH_SHORT).show();
+                        throw new Exception("too short of name or key");
+                    }
+
+                    InetAddress serverip= InetAddress.getByName(ip);;//定义保存服务器地址的对象
+                    Socket client=new Socket(serverip, Integer.parseInt(port));//定义创建客户端对象的Socket
+
+                    OutputStream socketOut=client.getOutputStream(); //定义发送信息的输出流对象
+                    InputStream socketIn=client.getInputStream(); //定义接收数据的输入流
+
+                    byte receive[] = new byte[buff_size]; //定义保存客户端发送来的数据的字节数组
+
+                    String sep = "_@#sE*p_";
+
+                    String firstData = db_name + sep + db_key + sep + "download";
+                    socketOut.write(firstData.getBytes("utf-8"));
+                    int len=socketIn.read(receive);
+                    String rev=new String(receive,0,len);
+
+                    if (! rev.equals("ok")){
+                        Toast.makeText(CloudActivity.this, "拒绝访问", Toast.LENGTH_SHORT).show();
+                        throw new Exception("access deny");
+                    }
+
+                    database.execSQL("delete from " + sqliteHelper.tableName + ";");
+
+                    while(true) {
+                        socketOut.write("next".getBytes("utf-8"));
+
+                        len=socketIn.read(receive);
+                        //将读取来保存在字节数组中的数据转换成字符串
+                        rev=new String(receive,0,len);
+                        if (rev.equals("deny")){
+                            Toast.makeText(CloudActivity.this, "传输中遇到错误", Toast.LENGTH_SHORT).show();
+                            throw new Exception("error at half road");
+                        }
+
+                        if (rev.equals("finished")) {
+                            Toast.makeText(CloudActivity.this, "同步完成", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        String[] dataArray = rev.split(sep);
 
                     }
                     socketOut.close();
