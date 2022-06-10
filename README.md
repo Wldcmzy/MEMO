@@ -6,7 +6,9 @@
 
 ## 介绍
 
-这是一个备忘录APP，备忘录功能部分借鉴了[xmenw/Note: 安卓记事本 (github.com)](https://github.com/xmenw/Note)模式。
+这是一个备忘录APP，具有基本的备忘录功能和云端同步功能。
+
+实现备忘录功能的部分借鉴了[xmenw/Note](https://github.com/xmenw/Note)这个项目的模式。
 
 ## 主要功能
 
@@ -19,7 +21,7 @@
 ## 实现方式
 
 1. 客户端和服务端的数据存储皆使用sqlite。
-2. 使用socket通过TCP协议实现数据传输。
+2. 使用socket实现TCP协议进行数据传输。
 3. 后端代码是一个写的非常摆烂的python脚本，详见server分支。
 
 ## 功能特性
@@ -31,23 +33,23 @@
 
 主页面
 
-![主页面](README/主页面.jpg)
+<img src="README/主页面.jpg" alt="主页面" style="zoom:25%;" />
 
 添加页面
 
-![添加页面](README/添加页面.jpg)
+<img src="README/添加页面.jpg" alt="添加页面" style="zoom:25%;" />
 
 单个备忘录页面
 
-![单个备忘录页面](README/单个备忘录页面.jpg)
+<img src="README/单个备忘录页面.jpg" alt="单个备忘录页面" style="zoom:25%;" />
 
 编辑页面
 
-![编辑页面](README/编辑页面.jpg)
+<img src="README/编辑页面.jpg" alt="编辑页面" style="zoom:25%;" />
 
 云端同步页面
 
-![云端同步页面](README/云端同步页面.jpg)
+<img src="README/云端同步页面.jpg" alt="云端同步页面" style="zoom:25%;" />
 
 ## 注意事项
 
