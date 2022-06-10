@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MemoSQLiteOpenHelper extends SQLiteOpenHelper {
     public final static int databaseVersion = 1;
-    public final static String databaseName = "memotest3.db";
-    public final static String tableName = "memo0";
+    public final static String databaseName = "memo.db";
+    public final static String tableName = "memo";
     public final static String datas = "datas";
     public final static String id = "id";
 //    public final static String createTime = "createTime";

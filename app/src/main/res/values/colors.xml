@@ -8,4 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#336699</color>
+    <color name="no">#00aaaa</color>
+    <color name="yes">#999999</color>
+    <color name="edit">#ff7755</color>
+    <color name="delete">#336699</color>
+    <color name="normal_botton">#8d9cab</color>
 </resources>

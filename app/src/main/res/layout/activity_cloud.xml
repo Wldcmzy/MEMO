@@ -46,34 +46,39 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/address_auto_write"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginLeft="10dp"
+                android:background="@color/normal_botton"/>
 
             <Button
                 android:id="@+id/ipsave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/address_save"
-                android:layout_marginLeft="20dp"/>
+                android:layout_marginLeft="20dp"
+                android:background="@color/normal_botton"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="30dp">
 
             <Button
                 android:id="@+id/upload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/upload"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginLeft="10dp"
+                android:background="@color/normal_botton"/>
 
             <Button
                 android:id="@+id/download"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/download"
-                android:layout_marginLeft="55dp"/>
+                android:layout_marginLeft="55dp"
+                android:background="@color/normal_botton"/>
         </LinearLayout>
 
     </LinearLayout>

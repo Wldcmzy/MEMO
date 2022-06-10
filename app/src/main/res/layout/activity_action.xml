@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="#fff"
-                android:background="#000000"
+                android:background="@color/no"
                 android:text="@string/back" />
             <Button
                 android:id="@+id/btn_add"
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="#fff"
-                android:background="#000000"
+                android:background="@color/yes"
                 android:text="@string/add" />
         </LinearLayout>
     </LinearLayout>

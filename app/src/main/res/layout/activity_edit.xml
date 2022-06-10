@@ -35,8 +35,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="#fff"
-                android:background="#000000"
+                android:textColor="#ffffff"
+                android:background="@color/no"
                 android:text="@string/cancel"/>
             <Button
                 android:id="@+id/save"
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="#fff"
-                android:background="#000000"
+                android:background="@color/yes"
                 android:text="@string/save"/>
         </LinearLayout>
     </LinearLayout>
