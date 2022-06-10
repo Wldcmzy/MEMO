@@ -4,7 +4,7 @@ import os
 from typing import List, Optional, Tuple
 
 DB_PATH = './DATABASE_PATH/'
-SEP = '_@#sE*p_'
+SEP = '_@#sE!p_'
 
 def open_database(DB_name : str, DB_password : str) -> Optional[sqlite3.Connection]:
     '''

@@ -39,19 +39,39 @@ def TCP_task(sk : socket.socket) -> None:
             data = sk.recv(BUFF_SIZE)
             data = data.decode('utf-8')
             print('receive >>>', data)
+
+            # 首次消息 创建数据库
             if not haveDB:
                 DB_name, DB_key, query = data.split(SEP)
+                DB_name += '.db'
+
+                # 若收到download请求, 先判断表是否存在, 若不在给予no_table回复
+                if query == 'download':
+                    if not os.path.exists(DB_PATH + DB_name):
+                        sk.send('no_table'.encode('utf-8'))
+                        print(f'无表{DB_name}!')
+                        raise Exception(f'无表{DB_name}!')
                 conn = open_database(DB_name, DB_key)
+
+
                 if conn == None:
+                    sk.send('deny'.encode('utf-8'))
+                    print('拒绝访问...')
                     raise Exception('数据库未打开, 可能密码错误...')
+
+                # 若处理download请求, 提前提取好信息
                 if query == 'download':
                     data_list, iter = getAllMemo(conn), 0
                 haveDB = True
                 sk.send('ok'.encode('utf-8'))
+
+            # 后续消息
             else:
                 if query == 'upload':
+                    # 存入一条数据
                     addOneMemo(conn, data)
                     sk.send('ok'.encode('utf-8'))
+
                 elif query == 'download':
                     if data == 'next':
                         if iter < len(data_list):
@@ -63,11 +83,11 @@ def TCP_task(sk : socket.socket) -> None:
                         else:
                             print('finish')
                             sk.send('finished'.encode('utf-8'))
+                            sk.close()
                     else:
                         sk.send('deny'.encode('utf-8'))
-                    
+                        sk.close()
                         
-                    
                     
             print('|-- done.')
             
