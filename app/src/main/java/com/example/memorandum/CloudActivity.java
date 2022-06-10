@@ -3,6 +3,7 @@ package com.example.memorandum;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -219,12 +220,14 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
         new Thread() {
             //线程运行的代码
             public void run() {
+                boolean know_error = false;
                 Looper.prepare();
                 try {
 
                     String db_name = storageName.getText().toString();
                     String db_key = storagePassword.getText().toString();
                     if(db_name.length() <= 2 || db_key.length() <= 2){
+                        know_error = true;
                         Toast.makeText(CloudActivity.this, "库名和密码长度需要大于2", Toast.LENGTH_SHORT).show();
                         throw new Exception("too short of name or key");
                     }
@@ -239,7 +242,7 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
 
                     Cursor cursor = database.query(sqliteHelper.tableName, null,null,null,null,null, sqliteHelper.lastModifyTime);
                     int rowSize = cursor.getCount();
-                    String sep = "_@#sE*p_";
+                    String sep = "_@#sE!p_";
 
                     String firstData = db_name + sep + db_key + sep + "upload";
                     socketOut.write(firstData.getBytes("utf-8"));
@@ -247,6 +250,7 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
                     String rev=new String(receive,0,len);
 
                     if (! rev.equals("ok")){
+                        know_error = true;
                         Toast.makeText(CloudActivity.this, "拒绝访问", Toast.LENGTH_SHORT).show();
                         throw new Exception("access deny");
                     }
@@ -270,6 +274,7 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
                         //将读取来保存在字节数组中的数据转换成字符串
                         rev=new String(receive,0,len);
                         if (! rev.equals("ok")){
+                            know_error = true;
                             Toast.makeText(CloudActivity.this, "传输中遇到错误", Toast.LENGTH_SHORT).show();
                             throw new Exception("error at half road");
                         }
@@ -286,7 +291,9 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
                 }
                 catch(Exception e){
                     Log.i("tcp-error", e.getMessage() + e.getStackTrace() + e.getClass());
-                    Toast.makeText(CloudActivity.this, "发生错误", Toast.LENGTH_SHORT).show();
+                    if(! know_error){
+                        Toast.makeText(CloudActivity.this, "发生错误", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 Looper.loop();
             }
@@ -319,12 +326,14 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
         new Thread() {
             //线程运行的代码
             public void run() {
+                boolean know_error = false;
                 Looper.prepare();
                 try {
 
                     String db_name = storageName.getText().toString();
                     String db_key = storagePassword.getText().toString();
                     if(db_name.length() <= 2 || db_key.length() <= 2){
+                        know_error = true;
                         Toast.makeText(CloudActivity.this, "库名和密码长度需要大于2", Toast.LENGTH_SHORT).show();
                         throw new Exception("too short of name or key");
                     }
@@ -337,7 +346,7 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
 
                     byte receive[] = new byte[buff_size]; //定义保存客户端发送来的数据的字节数组
 
-                    String sep = "_@#sE*p_";
+                    String sep = "_@#sE!p_";
 
                     String firstData = db_name + sep + db_key + sep + "download";
                     socketOut.write(firstData.getBytes("utf-8"));
@@ -345,8 +354,14 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
                     String rev=new String(receive,0,len);
 
                     if (! rev.equals("ok")){
-                        Toast.makeText(CloudActivity.this, "拒绝访问", Toast.LENGTH_SHORT).show();
-                        throw new Exception("access deny");
+                        know_error = true;
+                        if(rev.equals("no_table")){
+                            Toast.makeText(CloudActivity.this, "无此仓库", Toast.LENGTH_SHORT).show();
+                            throw new Exception("no storage");
+                        }else {
+                            Toast.makeText(CloudActivity.this, "拒绝访问", Toast.LENGTH_SHORT).show();
+                            throw new Exception("access deny");
+                        }
                     }
 
                     database.execSQL("delete from " + sqliteHelper.tableName + ";");
@@ -358,6 +373,7 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
                         //将读取来保存在字节数组中的数据转换成字符串
                         rev=new String(receive,0,len);
                         if (rev.equals("deny")){
+                            know_error = true;
                             Toast.makeText(CloudActivity.this, "传输中遇到错误", Toast.LENGTH_SHORT).show();
                             throw new Exception("error at half road");
                         }
@@ -366,24 +382,34 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
                             Toast.makeText(CloudActivity.this, "同步完成", Toast.LENGTH_SHORT).show();
                             break;
                         }
+
                         String[] dataArray = rev.split(sep);
+                        insertDB(dataArray[0], dataArray[1], dataArray[2]);
 
                     }
                     socketOut.close();
                     socketIn.close();
                     client.close();
-
-                    Toast.makeText(CloudActivity.this, "同步完成", Toast.LENGTH_SHORT).show();
                 }catch(ConnectException e){
                     Toast.makeText(CloudActivity.this, "未能成功连接服务器", Toast.LENGTH_SHORT).show();
                 }
                 catch(Exception e){
                     Log.i("tcp-error", e.getMessage() + e.getStackTrace() + e.getClass());
-                    Toast.makeText(CloudActivity.this, "发生错误", Toast.LENGTH_SHORT).show();
+                    if(! know_error){
+                        Toast.makeText(CloudActivity.this, "发生错误", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 Looper.loop();
             }
         }.start();//启动线程
+    }
+
+    private void insertDB(String datas, String lastModifyTime, String title) {
+        ContentValues values = new ContentValues();
+        values.put(sqliteHelper.datas, datas);
+        values.put(sqliteHelper.lastModifyTime, lastModifyTime);
+        values.put(sqliteHelper.title, title);
+        database.insert(sqliteHelper.tableName, null, values);
     }
 
 //    private void uploadUDP(String ip, String port){
